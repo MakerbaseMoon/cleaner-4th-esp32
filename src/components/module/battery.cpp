@@ -1,0 +1,3 @@
+void setup_battery() {
+    
+}
