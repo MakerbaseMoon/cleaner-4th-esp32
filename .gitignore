@@ -38,4 +38,7 @@
 .vscode/launch.json
 .vscode/ipch
 
+# cleaner project
 secret.h
+website.h
+data
