@@ -79,4 +79,7 @@ void set_module(Cleaner_module_conf *cleaner_conf);
 void set_default_eeprom();
 void clean_all_eeprom();
 
+// nvs.cpp
+void setup_data();
+
 #endif
