@@ -37,43 +37,7 @@ void loop_server() {
 
 void setup_website() {
     // [GET] http://cleaner/ - index
-    server.on("/", HTTP_GET, [] (AsyncWebServerRequest *request) {
-        AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", index_html, INDEX_HTML_LEN);
-        response->addHeader("Content-Encoding", "gzip");
-        request->send(response);
-    });
-
-    server.on("/static/css/main.c2cab247.css", HTTP_GET, [] (AsyncWebServerRequest *request) {
-        AsyncWebServerResponse *response = request->beginResponse_P(200, "text/css", main_c2cab247_css, MAIN_105545EE_JS_LEN);
-        response->addHeader("Content-Encoding", "gzip");
-        request->send(response);
-    });
-
-    server.on("/static/js/main.105545ee.js", HTTP_GET, [] (AsyncWebServerRequest *request) {
-        AsyncWebServerResponse *response = request->beginResponse_P(200, "text/javascript", main_105545ee_js, MAIN_105545EE_JS_LEN);
-        response->addHeader("Content-Encoding", "gzip");
-        request->send(response);
-    });
-
-    server.on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest *request) {
-        AsyncWebServerResponse *response = request->beginResponse_P(200, "image/jpg", favicon, FAVICON_LEN);
-        request->send(response);
-    });
-
-    server.on("/favicon.jpg", HTTP_GET, [](AsyncWebServerRequest *request) {
-        AsyncWebServerResponse *response = request->beginResponse_P(200, "image/jpg", favicon, FAVICON_LEN);
-        request->send(response);
-    });
-
-    server.on("/maker.jpg", HTTP_GET, [](AsyncWebServerRequest *request) {
-        AsyncWebServerResponse *response = request->beginResponse_P(200, "image/jpg", maker, MAKER_LEN);
-        request->send(response);
-    });
-
-    server.on("/cleaner.png", HTTP_GET, [](AsyncWebServerRequest *request) {
-        AsyncWebServerResponse *response = request->beginResponse_P(200, "image/jpg", cleaner, CLEANER_LEN);
-        request->send(response);
-    });
+    WEBSITE
 
     server.onNotFound([](AsyncWebServerRequest *request){
         char *redirect_url = (char *)malloc( sizeof(char) * 25 );
