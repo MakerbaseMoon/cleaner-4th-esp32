@@ -8,78 +8,41 @@
 #include "components/my_network.h"
 #include "components/module.h"
 
-/**
- *   0 ~  24 -> SSID
- *  25 ~  49 -> Password
- *  50 ~  74 -> AP SSID
- *  75 ~  99 -> AP Password
- * 100 ~ 124 -> ESP32 MDNS Name
- * 125 ~ 149 -> Pinout 
- *    125 -> Battery
- *    126-7 -> Battery MAX (2 Bytes)
- *    128-9 -> Battery MIN (2 Bytes)
- * 
- *    130 -> Fan (IRF520)
- * 
- *    131 -> A01 (MX1584)
- *    132 -> A02 (MX1584)
- *    133 -> B01 (MX1584)
- *    134 -> B02 (MX1584)
- * 
- *    135 -> A01 PWM (MX1584)
- *    136 -> A02 PWM (MX1584)
- *    137 -> B01 PWM (MX1584)
- *    138 -> B02 PWM (MX1584)
- * 
- * 150 ~ 174 -> EEPROM (4 is true, other is update) 
- */
+#define CLEANER_PREFERENCES_STRING_MAX_LEN 25
 
-#define EEPROM_MAX_LEN          25
+#define CLEANER_PREFERENCES_NAME "cleaner"
 
-#define EEPROM_SSID_ADDRESS        0
-#define EEPROM_PASSWD_ADDRESS     25
+#define CLEANER_PREFERENCES_KEY_STA_SSID "0"
+#define CLEANER_PREFERENCES_KEY_STA_PASSWD "1"
 
-#define EEPROM_AP_SSID_ADDRESS    50
-#define EEPROM_AP_PASSWD_ADDRESS  75
+#define CLEANER_PREFERENCES_KEY_AP_SSID "2"
+#define CLEANER_PREFERENCES_KEY_AP_PASSWD "3"
 
-#define EEPROM_MDNS_ADDRESS      100
+#define CLEANER_PREFERENCES_KEY_MDNS "4"
 
-#define EEPROM_BATTERY_PIN     125
-#define EEPROM_BATTERY_MAX     126
-#define EEPROM_BATTERY_MIN     128
+#define CLEANER_PREFERENCES_KEY_BATTERY_PIN "5"
+#define CLEANER_PREFERENCES_KEY_BATTERY_MAX "6"
+#define CLEANER_PREFERENCES_KEY_BATTERY_MIN "7"
 
-#define EEPROM_FAN_PIN         130
+#define CLEANER_PREFERENCES_KEY_FAN_PIN "8"
 
-#define EEPROM_MX1584_A01_PIN  131
-#define EEPROM_MX1584_A02_PIN  132
-#define EEPROM_MX1584_B01_PIN  133
-#define EEPROM_MX1584_B02_PIN  134
+#define CLEANER_PREFERENCES_KEY_A01_PIN "9"
+#define CLEANER_PREFERENCES_KEY_A02_PIN "a"
+#define CLEANER_PREFERENCES_KEY_B01_PIN "b"
+#define CLEANER_PREFERENCES_KEY_B02_PIN "c"
 
-#define EEPROM_MX1584_A01_PWM  135
-#define EEPROM_MX1584_A02_PWM  136
-#define EEPROM_MX1584_B01_PWM  137
-#define EEPROM_MX1584_B02_PWM  138
+#define CLEANER_PREFERENCES_KEY_A01_PWM "d"
+#define CLEANER_PREFERENCES_KEY_A02_PWM "e"
+#define CLEANER_PREFERENCES_KEY_B01_PWM "f"
+#define CLEANER_PREFERENCES_KEY_B02_PWM "g"
 
-#define EEPROM_CHECK_START     150
-#define EEPROM_CHECK_END       174
-#define EEPROM_CHECK_NUM       10
-
-// my_eeprom.cpp
-void setup_eeprom    (Cleaner_module_conf *cleaner_conf, Network_conf *network_conf);
-void get_network_conf(Network_conf *network_conf);
-void get_module_conf (Cleaner_module_conf *cleaner_conf);
-
+// nvs.cpp
+void setup_data(Cleaner_module_conf *cleaner_conf, Network_conf *network_conf);
 void set_STA_WiFi(const char* ssid, const char* passwd);
 void set_AP_WiFi (const char* ssid, const char* passwd) ;
 
 void set_mDNS_WiFi(const char* mdns);
 
 void set_module(Cleaner_module_conf *cleaner_conf);
-
-void set_default_eeprom();
-void clean_all_eeprom();
-
-// nvs.cpp
-void setup_data();
 
 #endif
