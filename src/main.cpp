@@ -39,7 +39,7 @@ void setup() {
     Serial.begin(115200);
     while(!Serial);
 
-    setup_eeprom(&my_cleaner_conf, &network_conf);
+    setup_data(&my_cleaner_conf, &network_conf);
     setup_module(&my_cleaner_conf);
     
     setup_wifi(&network_conf);
