@@ -159,12 +159,53 @@ void setup_api() {
 
     // [POST] http://cleaner/api/set/network - Set EEPROM WiFi STA or AP or mDNS
     server.on("/api/set/network", HTTP_POST, [] (AsyncWebServerRequest *request) {
-        
         int params = request->params();
         Serial.printf("[POST]/api/set/network: \n");
+        uint8_t network_set = 0;
         for (int i = 0; i < params; i++){
             AsyncWebParameter *p = request->getParam(i);
             Serial.printf("name: %s, value %s\n", p->name().c_str(), p->value().c_str());
+            
+            if (strcmp(p->name().c_str(), "AP_ssid") == 0) {
+                strcpy(*(_network_conf->ap_conf.ssid), p->value().c_str());
+            } else if (strcmp(p->name().c_str(), "AP_passwd") == 0) {
+                strcpy(*(_network_conf->ap_conf.passwd), p->value().c_str());
+                network_set = 1;
+                break;
+            }
+
+            if (strcmp(p->name().c_str(), "STA_ssid") == 0) {
+                strcpy(*(_network_conf->sta_conf.ssid), p->value().c_str());
+            } else if (strcmp(p->name().c_str(), "STA_passwd") == 0) {
+                strcpy(*(_network_conf->sta_conf.passwd), p->value().c_str());
+                network_set = 2;
+                break;
+            }
+
+            if (strcmp(p->name().c_str(), "mDNS") == 0) {
+                strcpy(*(_network_conf->mdns), p->value().c_str());
+                network_set = 3;
+                break;
+            }
+        }
+        switch (network_set) {
+            // Set AP
+            case 1:
+                set_AP_WiFi(*(_network_conf->ap_conf.ssid), *(_network_conf->ap_conf.passwd));
+                break;
+
+            // Set STA
+            case 2:
+                set_STA_WiFi(*(_network_conf->sta_conf.ssid), *(_network_conf->sta_conf.passwd));
+                break;
+
+            // Set mDNS
+            case 3:
+                set_mDNS_WiFi(*(_network_conf->mdns));
+                break;
+
+            default:
+                break;
         }
 
         request->send(200, "application/json", "{\"url\":\"/api/set/network\",\"status\":\"susses\"}");
