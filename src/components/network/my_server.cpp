@@ -165,7 +165,7 @@ void setup_api() {
         for (int i = 0; i < params; i++){
             AsyncWebParameter *p = request->getParam(i);
             Serial.printf("name: %s, value %s\n", p->name().c_str(), p->value().c_str());
-            
+
             if (strcmp(p->name().c_str(), "AP_ssid") == 0) {
                 strcpy(*(_network_conf->ap_conf.ssid), p->value().c_str());
             } else if (strcmp(p->name().c_str(), "AP_passwd") == 0) {
@@ -218,7 +218,44 @@ void setup_api() {
         Serial.printf("[POST]/api/set/module: \n");
         for (int i = 0; i < params; i++){
             AsyncWebParameter *p = request->getParam(i);
-            Serial.printf("name: %s, value %s\n", p->name().c_str(), p->value().c_str());
+            Serial.printf("name: %s, value: %s\n", p->name().c_str(), p->value().c_str());
+            if( strcmp(p->name().c_str(), "motor_pinout_A01") == 0 ) {
+                _cleaner_module_conf->mx1584_pinout_conf.pin_A01 = atoi( p->value().c_str() );
+
+            } else if( strcmp(p->name().c_str(), "motor_pinout_A02") == 0 ) {
+                _cleaner_module_conf->mx1584_pinout_conf.pin_A02 = atoi( p->value().c_str() );
+
+            } else if( strcmp(p->name().c_str(), "motor_pinout_B01") == 0 ) {
+                _cleaner_module_conf->mx1584_pinout_conf.pin_B01 = atoi( p->value().c_str() );
+
+            } else if( strcmp(p->name().c_str(), "motor_pinout_B02") == 0 ) {
+                _cleaner_module_conf->mx1584_pinout_conf.pin_B02 = atoi( p->value().c_str() );
+
+            } else if( strcmp(p->name().c_str(), "motor_pwm_A01") == 0 ) {
+                _cleaner_module_conf->mx1584_pwm_conf.channel_A01  = atoi( p->value().c_str() );
+                
+            } else if( strcmp(p->name().c_str(), "motor_pwm_A02") == 0 ) {
+                _cleaner_module_conf->mx1584_pwm_conf.channel_A02  = atoi( p->value().c_str() );
+                
+            } else if( strcmp(p->name().c_str(), "motor_pwm_B01") == 0 ) {
+                _cleaner_module_conf->mx1584_pwm_conf.channel_B01  = atoi( p->value().c_str() );
+                
+            } else if( strcmp(p->name().c_str(), "motor_pwm_B02") == 0 ) {
+                _cleaner_module_conf->mx1584_pwm_conf.channel_B02  = atoi( p->value().c_str() );
+                
+            } else if( strcmp(p->name().c_str(), "fan_pinout_pinout") == 0 ) {
+                _cleaner_module_conf->IRF520_pin  = atoi( p->value().c_str() );
+                
+            } else if( strcmp(p->name().c_str(), "battery_pinout_pinout") == 0 ) {
+                _cleaner_module_conf->battery_conf.pin  = atoi( p->value().c_str() );
+                
+            } else if( strcmp(p->name().c_str(), "battery_pinout_min") == 0 ) {
+                _cleaner_module_conf->battery_conf.min  = atoi( p->value().c_str() );
+                
+            } else if( strcmp(p->name().c_str(), "battery_pinout_max") == 0 ) {
+                _cleaner_module_conf->battery_conf.max  = atoi( p->value().c_str() );
+                
+            }
         }
 
         request->send(200, "application/json", "{\"url\":\"/api/set/module\",\"status\":\"susses\"}");
