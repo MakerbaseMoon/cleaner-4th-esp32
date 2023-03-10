@@ -1,0 +1,23 @@
+name: PlatformIO CI/CD
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name:
+        run: |
+          RELEASE_URL=$(curl -s "https://api.github.com/repos/$OWNER/$REPO/releases/latest" | grep '"browser_download_url":.website.h' | sed -E 's/."([^"]+)".*/\1/')
+          wget ${RELEASE_URL} ./include/components/website.h
+          ls -al
+          ls -al ./include/components/
