@@ -19,7 +19,7 @@ jobs:
         run: |
           OWNER="MakerbaseMoon"
           REPO="cleaner-4th-website"
-          RELEASE_URL=$(curl -s "https://api.github.com/repos/${OWNER}/${REPO}/releases/latest" | grep '"browser_download_url":.website.h' | sed -E 's/."([^"]+)".*/\1/')
+          RELEASE_URL=$(curl -s "https://api.github.com/repos/${OWNER}/${REPO}/releases/latest" | grep -o '"browser_download_url": "[^"]*website\.h"' | cut -d'"' -f4)
           echo ${RELEASE_URL} 
           wget -P include/components/website.h  ${RELEASE_URL} 
           ls -al
