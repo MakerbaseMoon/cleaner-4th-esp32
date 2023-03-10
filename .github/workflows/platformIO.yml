@@ -22,7 +22,9 @@ jobs:
           RELEASE_URL=$(curl -s "https://api.github.com/repos/${OWNER}/${REPO}/releases/latest" | grep -o '"browser_download_url": "[^"]*website\.h"' | cut -d'"' -f4)
           echo ${RELEASE_URL} 
           wget -P include/components/  ${RELEASE_URL} 
-          ls include/components/
+          echo "## 🌐 Website Robot Vacuum Cleaner 4th" >> commit_msg.txt
+          TAG_VERSION=$(curl -s "https://api.github.com/repos/${OWNER}/${REPO}/releases/latest" | grep -o '"tag_name": "[^"]*' | grep -o '[^"]*$')
+          echo "🔖 [Website Release](https://github.com/${OWNER}/${REPO}/releases/latest) (🏷️ ${TAG_VERSION})" >> commit_msg.txt
       
       - name: Install PlatformIO python
         uses: actions/setup-python@v4
@@ -35,20 +37,14 @@ jobs:
       - name: Build PlatformIO Project
         run: pio run
 
-      - name: List for build
-        run: |
-          ls
-          ls .pio
-          ls .pio/build
-          ls .pio/build/esp32doit-devkit-v1
-
       - name: Get commits between tags
         run: |
           TAG1=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1) | cut -d'-' -f1)
           TAG2=$(git describe --tags)
           COMMIT_RANGE="$TAG1..$TAG2"
           echo $COMMIT_RANGE
-          echo "" > commit_msg.txt
+          echo $(/usr/bin/git log $COMMIT_RANGE --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short | wc -l)
+          echo "" >> commit_msg.txt
           if [ $(/usr/bin/git log $COMMIT_RANGE --grep="feat:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short | wc -l) -gt 0 ]; then
             echo "# ✨ Features" >> commit_msg.txt
             /usr/bin/git log $COMMIT_RANGE --grep="feat:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
