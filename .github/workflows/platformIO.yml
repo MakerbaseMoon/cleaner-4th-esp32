@@ -18,6 +18,6 @@ jobs:
       - name:
         run: |
           RELEASE_URL=$(curl -s "https://api.github.com/repos/$OWNER/$REPO/releases/latest" | grep '"browser_download_url":.website.h' | sed -E 's/."([^"]+)".*/\1/')
-          wget ${RELEASE_URL} ./include/components/website.h
+          wget -P include/components/website.h  ${RELEASE_URL} 
           ls -al
-          ls -al ./include/components/
+          ls -al include/components/
