@@ -33,19 +33,19 @@ jobs:
           TAG2=$(git describe --tags)
           COMMIT_RANGE="$TAG1..$TAG2"
           echo "🏷️commit version: ${COMMIT_RANGE}"
-          FEAT_LEN=$(/usr/bin/git log ${COMMIT_RANGE} --grep="feat:" --pretty=format:"%s" --date=short | grep -c "feat:")
-          FIX_LEN=$(/usr/bin/git log ${COMMIT_RANGE} --grep="fix:" --pretty=format:"%s" --date=short | grep -c "fix:")
-          DOCS_LEN=$(/usr/bin/git log ${COMMIT_RANGE} --grep="docs:" --pretty=format:"%s" --date=short | grep -c "docs:")
-          STYLE_LEN=$(/usr/bin/git log ${COMMIT_RANGE} --grep="style:" --pretty=format:"%s" --date=short | grep -c "style:")
-          REFACTOR_LEN=$(/usr/bin/git log ${COMMIT_RANGE} --grep="refactor:" --pretty=format:"%s" --date=short | grep -c "refactor:")
-          TEST_LEN=$(/usr/bin/git log ${COMMIT_RANGE} --grep="test:" --pretty=format:"%s" --date=short | grep -c "test:")
-          CHORE_LEN=$(/usr/bin/git log ${COMMIT_RANGE} --grep="chore:" --pretty=format:"%s" --date=short | grep -c "chore:")
+          FEAT_LEN=$(/usr/bin/git log ${COMMIT_RANGE} --grep="feat:" --pretty=format:"%s" --date=short | wc -l)
           echo "✨ Features len: ${FEAT_LEN}"
+          FIX_LEN=$(/usr/bin/git log ${COMMIT_RANGE} --grep="fix:" --pretty=format:"%s" --date=short | grep -c "fix:")
           echo "🐛 Bug Fixes len: ${FIX_LEN}"
+          DOCS_LEN=$(/usr/bin/git log ${COMMIT_RANGE} --grep="docs:" --pretty=format:"%s" --date=short | grep -c "docs:")
           echo "📝 Documentation len: ${DOCS_LEN}"
+          STYLE_LEN=$(/usr/bin/git log ${COMMIT_RANGE} --grep="style:" --pretty=format:"%s" --date=short | grep -c "style:")
           echo "🎨 Style len: ${STYLE_LEN}"
+          REFACTOR_LEN=$(/usr/bin/git log ${COMMIT_RANGE} --grep="refactor:" --pretty=format:"%s" --date=short | grep -c "refactor:")
           echo "♻️ Refactoring len: ${REFACTOR_LEN}"
+          TEST_LEN=$(/usr/bin/git log ${COMMIT_RANGE} --grep="test:" --pretty=format:"%s" --date=short | grep -c "test:")
           echo "🧪 Tests len: ${TEST_LEN}"
+          CHORE_LEN=$(/usr/bin/git log ${COMMIT_RANGE} --grep="chore:" --pretty=format:"%s" --date=short | grep -c "chore:")
           echo "🚀 Chore len: ${CHORE_LEN}"
           if [ ${FEAT_LEN} -gt 0 ]; then
             echo "# ✨ Features" >> commit_msg.txt
