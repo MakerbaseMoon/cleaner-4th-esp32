@@ -43,7 +43,7 @@ jobs:
           TAG2=$(git describe --tags)
           COMMIT_RANGE="$TAG1..$TAG2"
           echo $COMMIT_RANGE
-          echo $(/usr/bin/git log $COMMIT_RANGE --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short | wc -l)
+          echo $(/usr/bin/git log $COMMIT_RANGE --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short)
           echo "" >> commit_msg.txt
           if [ $(/usr/bin/git log $COMMIT_RANGE --grep="feat:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short | wc -l) -gt 0 ]; then
             echo "# ✨ Features" >> commit_msg.txt
