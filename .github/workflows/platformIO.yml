@@ -15,12 +15,81 @@ jobs:
         with:
           fetch-depth: 0
       
-      - name:
+      - name: Download website.h
         run: |
           OWNER="MakerbaseMoon"
           REPO="cleaner-4th-website"
           RELEASE_URL=$(curl -s "https://api.github.com/repos/${OWNER}/${REPO}/releases/latest" | grep -o '"browser_download_url": "[^"]*website\.h"' | cut -d'"' -f4)
           echo ${RELEASE_URL} 
           wget -P include/components/website.h  ${RELEASE_URL} 
-          ls -al
-          ls -al include/components/
+          ls include/components/
+      
+      - name: Install PlatformIO python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install PlatformIO Core
+        run: pip install --upgrade platformio
+
+      - name: Build PlatformIO Project
+        run: pio run
+
+      - name: List for build
+        run: |
+          ls
+          ls .pio
+          ls .pio/build
+          ls .pio/build/esp32doit-devkit-v1
+
+      - name: Get commits between tags
+        run: |
+          TAG1=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1) | cut -d'-' -f1)
+          TAG2=$(git describe --tags)
+          COMMIT_RANGE="$TAG1..$TAG2"
+          echo $COMMIT_RANGE
+          echo "" > commit_msg.txt
+          if [ $(/usr/bin/git log $COMMIT_RANGE --grep="feat:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short | wc -l) -gt 0 ]; then
+            echo "# ✨ Features" >> commit_msg.txt
+            /usr/bin/git log $COMMIT_RANGE --grep="feat:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
+            echo -e "\n" >> commit_msg.txt
+          fi
+          if [ $(/usr/bin/git log $COMMIT_RANGE --grep="fix:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short | wc -l) -gt 0 ]; then
+            echo "# 🐛 Bug Fixes" >> commit_msg.txt
+            /usr/bin/git log $COMMIT_RANGE --grep="fix:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
+            echo -e "\n" >> commit_msg.txt
+          fi
+          if [ $(/usr/bin/git log $COMMIT_RANGE --grep="docs:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short | wc -l) -gt 0 ]; then
+            echo "# 📝 Documentation" >> commit_msg.txt
+            /usr/bin/git log $COMMIT_RANGE --grep="docs:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
+            echo -e "\n" >> commit_msg.txt
+          fi
+          if [ $(/usr/bin/git log $COMMIT_RANGE --grep="style:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short | wc -l) -gt 0 ]; then
+            echo "# 🎨 Style" >> commit_msg.txt
+            /usr/bin/git log $COMMIT_RANGE --grep="style:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
+            echo -e "\n" >> commit_msg.txt
+          fi
+          if [ $(/usr/bin/git log $COMMIT_RANGE --grep="refactor:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short | wc -l) -gt 0 ]; then
+            echo "# ♻️ Refactoring" >> commit_msg.txt
+            /usr/bin/git log $COMMIT_RANGE --grep="refactor:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
+            echo -e "\n" >> commit_msg.txt
+          fi
+          if [ $(/usr/bin/git log $COMMIT_RANGE --grep="test:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short | wc -l) -gt 0 ]; then
+            echo "# 🧪 Tests" >> commit_msg.txt
+            /usr/bin/git log $COMMIT_RANGE --grep="test:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
+            echo -e "\n" >> commit_msg.txt
+          fi
+          if [ $(/usr/bin/git log $COMMIT_RANGE --grep="chore:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short | wc -l) -gt 0 ]; then
+            echo "# 🚀 Chore" >> commit_msg.txt
+            /usr/bin/git log $COMMIT_RANGE --grep="chore:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
+            echo -e "\n" >> commit_msg.txt
+          fi
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          body_path: commit_msg.txt
+          name: "Cleaner ESP32 ${{ github.ref_name }}"
+          files: .pio/build/esp32doit-devkit-v1/firmware.bin
+          token: ${{ secrets.TOKEN }}
