@@ -26,17 +26,6 @@ jobs:
           TAG_VERSION=$(curl -s "https://api.github.com/repos/${OWNER}/${REPO}/releases/latest" | grep -o '"tag_name": "[^"]*' | grep -o '[^"]*$')
           echo "🔖[Website Release](https://github.com/${OWNER}/${REPO}/releases/latest) 🏷️${TAG_VERSION}" >> commit_msg.txt
           echo -e "\n" >> commit_msg.txt
-      
-      - name: Install PlatformIO python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-
-      - name: Install PlatformIO Core
-        run: pip install --upgrade platformio
-
-      - name: Build PlatformIO Project
-        run: pio run
 
       - name: Get commits between tags
         run: |
@@ -44,13 +33,13 @@ jobs:
           TAG2=$(git describe --tags)
           COMMIT_RANGE="$TAG1..$TAG2"
           echo "🏷️commit version: ${COMMIT_RANGE}"
-          FEAT_LEN=$(/usr/bin/git log $COMMIT_RANGE --grep="feat:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short | grep -c "feat:")
-          FIX_LEN=$(/usr/bin/git log $COMMIT_RANGE --grep="fix:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short | grep -c "fix:")
-          DOCS_LEN=$(/usr/bin/git log $COMMIT_RANGE --grep="docs:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short | grep -c "docs:")
-          STYLE_LEN=$(/usr/bin/git log $COMMIT_RANGE --grep="style:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short | grep -c "style:")
-          REFACTOR_LEN=$(/usr/bin/git log $COMMIT_RANGE --grep="refactor:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short | grep -c "refactor:")
-          TEST_LEN=$(/usr/bin/git log $COMMIT_RANGE --grep="test:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short | grep -c "test:")
-          CHORE_LEN=$(/usr/bin/git log $COMMIT_RANGE --grep="chore:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short | grep -c "chore:")
+          FEAT_LEN=$(/usr/bin/git log ${COMMIT_RANGE} --grep="feat:" --pretty=format:"%s" --date=short | grep -c "feat:")
+          FIX_LEN=$(/usr/bin/git log ${COMMIT_RANGE} --grep="fix:" --pretty=format:"%s" --date=short | grep -c "fix:")
+          DOCS_LEN=$(/usr/bin/git log ${COMMIT_RANGE} --grep="docs:" --pretty=format:"%s" --date=short | grep -c "docs:")
+          STYLE_LEN=$(/usr/bin/git log ${COMMIT_RANGE} --grep="style:" --pretty=format:"%s" --date=short | grep -c "style:")
+          REFACTOR_LEN=$(/usr/bin/git log ${COMMIT_RANGE} --grep="refactor:" --pretty=format:"%s" --date=short | grep -c "refactor:")
+          TEST_LEN=$(/usr/bin/git log ${COMMIT_RANGE} --grep="test:" --pretty=format:"%s" --date=short | grep -c "test:")
+          CHORE_LEN=$(/usr/bin/git log ${COMMIT_RANGE} --grep="chore:" --pretty=format:"%s" --date=short | grep -c "chore:")
           echo "✨ Features len: ${FEAT_LEN}"
           echo "🐛 Bug Fixes len: ${FIX_LEN}"
           echo "📝 Documentation len: ${DOCS_LEN}"
@@ -60,39 +49,50 @@ jobs:
           echo "🚀 Chore len: ${CHORE_LEN}"
           if [ ${FEAT_LEN} -gt 0 ]; then
             echo "# ✨ Features" >> commit_msg.txt
-            /usr/bin/git log $COMMIT_RANGE --grep="feat:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
+            /usr/bin/git log ${COMMIT_RANGE} --grep="feat:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
             echo -e "\n" >> commit_msg.txt
           fi
           if [ ${FIX_LEN} -gt 0 ]; then
             echo "# 🐛 Bug Fixes" >> commit_msg.txt
-            /usr/bin/git log $COMMIT_RANGE --grep="fix:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
+            /usr/bin/git log ${COMMIT_RANGE} --grep="fix:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
             echo -e "\n" >> commit_msg.txt
           fi
           if [ ${DOCS_LEN} -gt 0 ]; then
             echo "# 📝 Documentation" >> commit_msg.txt
-            /usr/bin/git log $COMMIT_RANGE --grep="docs:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
+            /usr/bin/git log ${COMMIT_RANGE} --grep="docs:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
             echo -e "\n" >> commit_msg.txt
           fi
           if [ ${STYLE_LEN} -gt 0 ]; then
             echo "# 🎨 Style" >> commit_msg.txt
-            /usr/bin/git log $COMMIT_RANGE --grep="style:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
+            /usr/bin/git log ${COMMIT_RANGE} --grep="style:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
             echo -e "\n" >> commit_msg.txt
           fi
           if [ ${REFACTOR_LEN} -gt 0 ]; then
             echo "# ♻️ Refactoring" >> commit_msg.txt
-            /usr/bin/git log $COMMIT_RANGE --grep="refactor:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
+            /usr/bin/git log ${COMMIT_RANGE} --grep="refactor:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
             echo -e "\n" >> commit_msg.txt
           fi
           if [ ${TEST_LEN} -gt 0 ]; then
             echo "# 🧪 Tests" >> commit_msg.txt
-            /usr/bin/git log $COMMIT_RANGE --grep="test:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
+            /usr/bin/git log ${COMMIT_RANGE} --grep="test:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
             echo -e "\n" >> commit_msg.txt
           fi
           if [ ${CHORE_LEN} -gt 0 ]; then
             echo "# 🚀 Chore" >> commit_msg.txt
-            /usr/bin/git log $COMMIT_RANGE --grep="chore:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
+            /usr/bin/git log ${COMMIT_RANGE} --grep="chore:" --pretty=format:"- [%ad]%s ([%an](https://github.com/${{github.repository_owner}}/${{github.event.repository.name}}/commit/%h))" --date=short >> commit_msg.txt
             echo -e "\n" >> commit_msg.txt
           fi
+
+      - name: Install PlatformIO python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install PlatformIO Core
+        run: pip install --upgrade platformio
+
+      - name: Build PlatformIO Project
+        run: pio run     
 
       - name: Release
         uses: softprops/action-gh-release@v1
