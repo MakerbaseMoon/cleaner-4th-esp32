@@ -44,21 +44,31 @@ void setup_data(Cleaner_module_conf *cleaner_conf, Network_conf *network_conf) {
 
     strcpy(*(network_conf->mdns), cleanerData.getString(CLEANER_PREFERENCES_KEY_MDNS, CLEANER_DEFAULT_MDNS).c_str());
 
-    cleaner_conf->battery_conf.pin = cleanerData.getUInt(CLEANER_PREFERENCES_KEY_BATTERY_PIN, CLEANER_DEFAULT_BATTERY);
-    cleaner_conf->battery_conf.min = cleanerData.getUInt(CLEANER_PREFERENCES_KEY_BATTERY_MAX, CLEANER_DEFAULT_BATTERY_MAX_VALUE);
-    cleaner_conf->battery_conf.max = cleanerData.getUInt(CLEANER_PREFERENCES_KEY_BATTERY_MIN, CLEANER_DEFAULT_BATTERY_MIN_VALUE);
+    // Initialize battery configuration
+    cleaner_conf->battery_conf = {
+        .pin = (uint8_t)(cleanerData.getUInt(CLEANER_PREFERENCES_KEY_BATTERY_PIN, CLEANER_DEFAULT_BATTERY)),
+        .max = (uint8_t)(cleanerData.getUInt(CLEANER_PREFERENCES_KEY_BATTERY_MAX, CLEANER_DEFAULT_BATTERY_MAX_VALUE)),
+        .min = (uint8_t)(cleanerData.getUInt(CLEANER_PREFERENCES_KEY_BATTERY_MIN, CLEANER_DEFAULT_BATTERY_MIN_VALUE))
+    };
 
+    // Initialize fan pin configuration
     cleaner_conf->IRF520_pin = cleanerData.getUInt(CLEANER_PREFERENCES_KEY_FAN_PIN, CLEANER_DEFAULT_FAN);
 
-    cleaner_conf->mx1584_pinout_conf.pin_A01 = cleanerData.getUInt(CLEANER_PREFERENCES_KEY_A01_PIN, CLEANER_DEFAULT_MOTOR_A01);
-    cleaner_conf->mx1584_pinout_conf.pin_A02 = cleanerData.getUInt(CLEANER_PREFERENCES_KEY_A02_PIN, CLEANER_DEFAULT_MOTOR_A02);
-    cleaner_conf->mx1584_pinout_conf.pin_B01 = cleanerData.getUInt(CLEANER_PREFERENCES_KEY_B01_PIN, CLEANER_DEFAULT_MOTOR_B01);
-    cleaner_conf->mx1584_pinout_conf.pin_B02 = cleanerData.getUInt(CLEANER_PREFERENCES_KEY_B02_PIN, CLEANER_DEFAULT_MOTOR_B02);
-    
-    cleaner_conf->mx1584_pwm_conf.channel_A01 = cleanerData.getUInt(CLEANER_PREFERENCES_KEY_A01_PWM, CLEANER_DEFAULT_MOTOR_PWM);
-    cleaner_conf->mx1584_pwm_conf.channel_A02 = cleanerData.getUInt(CLEANER_PREFERENCES_KEY_A02_PWM, CLEANER_DEFAULT_MOTOR_PWM);
-    cleaner_conf->mx1584_pwm_conf.channel_B01 = cleanerData.getUInt(CLEANER_PREFERENCES_KEY_B01_PWM, CLEANER_DEFAULT_MOTOR_PWM);
-    cleaner_conf->mx1584_pwm_conf.channel_B02 = cleanerData.getUInt(CLEANER_PREFERENCES_KEY_B02_PWM, CLEANER_DEFAULT_MOTOR_PWM);
+    // Initialize motor pinout configuration
+    cleaner_conf->mx1584_pinout_conf = {
+        .pin_A01 = (uint8_t)(cleanerData.getUInt(CLEANER_PREFERENCES_KEY_A01_PIN, CLEANER_DEFAULT_MOTOR_A01)),
+        .pin_A02 = (uint8_t)(cleanerData.getUInt(CLEANER_PREFERENCES_KEY_A02_PIN, CLEANER_DEFAULT_MOTOR_A02)),
+        .pin_B01 = (uint8_t)(cleanerData.getUInt(CLEANER_PREFERENCES_KEY_B01_PIN, CLEANER_DEFAULT_MOTOR_B01)),
+        .pin_B02 = (uint8_t)(cleanerData.getUInt(CLEANER_PREFERENCES_KEY_B02_PIN, CLEANER_DEFAULT_MOTOR_B02))
+    };
+
+    // Initialize motor PWM configuration
+    cleaner_conf->mx1584_pwm_conf = {
+        .channel_A01 = (uint8_t)(cleanerData.getUInt(CLEANER_PREFERENCES_KEY_A01_PWM, CLEANER_DEFAULT_MOTOR_PWM)),
+        .channel_A02 = (uint8_t)(cleanerData.getUInt(CLEANER_PREFERENCES_KEY_A02_PWM, CLEANER_DEFAULT_MOTOR_PWM)),
+        .channel_B01 = (uint8_t)(cleanerData.getUInt(CLEANER_PREFERENCES_KEY_B01_PWM, CLEANER_DEFAULT_MOTOR_PWM)),
+        .channel_B02 = (uint8_t)(cleanerData.getUInt(CLEANER_PREFERENCES_KEY_B02_PWM, CLEANER_DEFAULT_MOTOR_PWM))
+    };
     
     // Save the changes to Preferences
     cleanerData.end();
