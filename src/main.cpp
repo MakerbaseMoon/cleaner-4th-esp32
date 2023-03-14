@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <EEPROM.h>
 
 #include "components/module.h"
 #include "components/setting.h"
@@ -50,7 +49,7 @@ void setup() {
     // delay(1000);
     // xTaskCreatePinnedToCore(Task1code, "Task1", 1024, NULL, 1, &Task1, 1);                         
     // delay(500); 
-  
+
     // xTaskCreatePinnedToCore(Task2code, "Task2", 10000, NULL, 1, &Task2, 1);          
     // delay(500);  
 }
