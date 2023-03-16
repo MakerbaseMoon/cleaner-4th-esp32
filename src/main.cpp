@@ -1,5 +1,6 @@
 #include <Arduino.h>
 
+#include "components/ota.h"
 #include "components/module.h"
 #include "components/setting.h"
 #include "components/my_network.h"
@@ -17,6 +18,9 @@ char *ap_passwd  = NULL;
 char *mdns       = NULL;
 
 Cleaner_module_conf my_cleaner_conf;
+String url;
+
+uint8_t cleaner_mode = 1;
 
 Network_STA_conf my_sta_conf = {
     .ssid   = &sta_ssid,
@@ -42,7 +46,7 @@ void setup() {
     setup_module(&my_cleaner_conf);
     
     setup_wifi(&network_conf);
-    setup_server(&my_cleaner_conf, &network_conf);
+    setup_server(&my_cleaner_conf, &network_conf, &cleaner_mode, &url);
 
     show_dashboard(2, 0);
     
@@ -56,7 +60,18 @@ void setup() {
 
 void loop() {
     loop_server();
+    if(cleaner_mode == 0) {
+        if(!update_loop(url)) {
+            cleaner_mode = 2;
+            ESP.restart();
+        } else {
+            cleaner_mode = 2;
+        }
+    } else if(cleaner_mode == 1) {
 
+    } else if(cleaner_mode == 2) {
+        
+    }
     // show_dashboard(2, 0);
     // delay(1000);
     // show_dashboard(2, 0);

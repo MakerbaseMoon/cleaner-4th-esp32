@@ -22,7 +22,7 @@ struct Network_conf {
     char **mdns;
 };
 
-void setup_server(Cleaner_module_conf *cleaner_module_conf, Network_conf *network_conf);
+void setup_server(Cleaner_module_conf *cleaner_module_conf, Network_conf *network_conf, uint8_t *cleaner_mode, String *url);
 void loop_server();
 
 void setup_website();

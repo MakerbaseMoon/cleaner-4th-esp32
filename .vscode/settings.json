@@ -20,6 +20,13 @@
         "tuple": "cpp",
         "type_traits": "cpp",
         "utility": "cpp",
-        "limits": "cpp"
+        "limits": "cpp",
+        "httpclient.h": "c",
+        "httpupdate.h": "c",
+        "arduino.h": "c",
+        "wifi.h": "c",
+        "wifista.h": "c",
+        "wifigeneric.h": "c",
+        "bitset": "cpp"
     }
 }

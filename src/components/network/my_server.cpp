@@ -2,6 +2,7 @@
 #include <DNSServer.h>
 // #include <SPIFFS.h>
 #include <WiFi.h>
+#include <Update.h>
 
 #include "components/website.h"
 #include "components/setting.h"
@@ -14,13 +15,20 @@ DNSServer dnsServer;
 Cleaner_module_conf *_cleaner_module_conf;
 Network_conf *_network_conf;
 
-void setup_server(Cleaner_module_conf *cleaner_module_conf, Network_conf *network_conf) {
+uint8_t *_cleaner_mode = NULL;
+String *_url;
+
+bool shouldReboot = false;
+
+void setup_server(Cleaner_module_conf *cleaner_module_conf, Network_conf *network_conf, uint8_t *cleaner_mode, String *url) {
     // if(!SPIFFS.begin()) {
     //     while(1);
     // }
 
     _cleaner_module_conf = cleaner_module_conf;
     _network_conf        = network_conf;
+    _cleaner_mode        = cleaner_mode;
+    _url                = url;
 
     dnsServer.start(53, "*", local_IP);
 
@@ -80,6 +88,23 @@ void setup_api() {
                         motor_stop();
                         break;
                 }
+            }
+        }
+
+        request->send(200, "application/json", "{\"url\":\"/api/mode\",\"status\":\"susses\"}");
+    });
+
+    server.on("/api/ota/firmware", HTTP_POST, [] (AsyncWebServerRequest *request) {
+        motor_stop();
+
+        int params = request->params();
+        Serial.printf("[POST]/api/mode: \n");
+        for (int i = 0; i < params; i++){
+            AsyncWebParameter *p = request->getParam(i);
+            Serial.printf("name: %s, value %s\n", p->name().c_str(), p->value().c_str());
+            if(p->name().indexOf("url") == 0) {
+                *_url = (String)(p->value().c_str());
+                *_cleaner_mode = 0;
             }
         }
 
