@@ -1,9 +1,6 @@
 #ifndef __CLEANER_HEADER_H__
 #define __CLEANER_HEADER_H__
 
-// cleaner version
-#define CLEANER_VERSION "0.0.1"
-
 // I2C
 #define CLEANER_DEFAULT_I2C_SDA 21
 #define CLEANER_DEFAULT_I2C_SCL 22

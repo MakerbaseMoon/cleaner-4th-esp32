@@ -4,6 +4,7 @@
 #include <WiFi.h>
 #include <Update.h>
 
+#include "version.h"
 #include "components/website.h"
 #include "components/setting.h"
 
@@ -330,6 +331,20 @@ void setup_api() {
     server.on("/api/esp/sleep", HTTP_POST, [] (AsyncWebServerRequest *request) {
         request->send(200, "application/json", "{\"url\":\"/api/esp/sleep\",\"status\":\"susses\"}");
         ESP.deepSleep(100000);
+    });
+
+    // [POST] http://cleaner/api/esp/verion- Get ESP32 version
+    server.on("/api/esp/verion", HTTP_POST, [] (AsyncWebServerRequest *request) {
+        char *json_str = (char *)malloc( sizeof(char) * 70 );
+        if(json_str != NULL) { 
+            sprintf(json_str,
+                "{\"url\":\"/api/esp/verion\",\"version\":\"%s\",\"status\":\"susses\"}",
+                CLEANER_VERSION
+            );
+            request->send(200, "application/json", json_str);
+        } else {
+            request->send(400, "application/json", "{\"url\":\"/api/esp/version\",\"status\":\"error\",\"message\":\"The ESP verion was null\"}");
+        }
     });
 
     // [POST] http://cleaner/api/esp/info- Get ESP32 info

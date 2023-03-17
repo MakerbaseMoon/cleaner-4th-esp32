@@ -69,6 +69,10 @@ jobs:
             echo -e "\n" >> commit_msg.txt
           fi
 
+      - name: Change Version
+        run: |
+          sed -i "s/0\.0\.0/$(git describe --tags)/" ./include/version.h
+
       - name: Install PlatformIO python
         uses: actions/setup-python@v4
         with:
