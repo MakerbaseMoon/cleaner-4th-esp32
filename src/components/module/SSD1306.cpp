@@ -19,18 +19,20 @@ void show_logo() {
     display.display();
 }
 
-void show_dashboard(uint8_t mode, uint8_t battery_value) {
+void show_dashboard(uint8_t mode) {
     display.clearDisplay();
 
-    show_dashboard_battery_20(70);
+    show_dashboard_battery_20();
     display.drawBitmap(6, 22, image_ap_20, 20, 20, WHITE);
     show_dashboard_wifi_20();
-    show_dashboard_body(mode, battery_value);
+    show_dashboard_body(mode);
 
     display.display();
 }
 
-void show_dashboard_battery_20(uint8_t battery_value) {
+void show_dashboard_battery_20() {
+    uint8_t battery_value = get_electricity();
+
     if(battery_value > 60) {
         display.drawBitmap(6, 1, image_batter_full_20, 20, 20, WHITE);
 
@@ -50,7 +52,7 @@ void show_dashboard_wifi_20() {
     }
 }
 
-void show_dashboard_body(uint8_t mode, uint8_t battery_value) {
+void show_dashboard_body(uint8_t mode) {
     static int body = 0;
     if(body == 0) {
         body = 1;
@@ -69,11 +71,13 @@ void show_dashboard_body(uint8_t mode, uint8_t battery_value) {
         }
     } else if(body == 1)  {
         body = 0;
-        show_dashboard_battery(battery_value);
+        show_dashboard_battery();
     }
 }
 
-void show_dashboard_battery(uint8_t battery_value) {
+void show_dashboard_battery() {
+    uint8_t battery_value = get_electricity();
+
     display.drawBitmap(55, 7, image_battery_50, 50, 50, WHITE);
     display.setTextSize(2);
     display.setTextColor(SSD1306_WHITE);

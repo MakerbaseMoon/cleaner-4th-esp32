@@ -11,7 +11,7 @@ struct Battery_conf {
 };
 
 void setup_battery(Battery_conf *conf);
-uint8_t get_electricity(Battery_conf *conf);
+uint8_t get_electricity();
 
 // MX1584.cpp
 
@@ -48,11 +48,11 @@ void set_IRF520_PWM(uint32_t duty);
 // SSD1306.cpp
 void setup_SSD1306();
 void show_logo();
-void show_dashboard(uint8_t mode, uint8_t battery_value);
-void show_dashboard_battery_20(uint8_t battery_value);
+void show_dashboard(uint8_t mode);
+void show_dashboard_battery_20();
 void show_dashboard_wifi_20();
-void show_dashboard_body(uint8_t mode, uint8_t battery_value);
-void show_dashboard_battery(uint8_t battery_value);
+void show_dashboard_body(uint8_t mode);
+void show_dashboard_battery();
 
 // VL53L0X.cpp
 struct VL53L0X_value{

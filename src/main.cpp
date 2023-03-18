@@ -5,11 +5,9 @@
 #include "components/setting.h"
 #include "components/my_network.h"
 
-// TaskHandle_t Task1;
-// TaskHandle_t Task2;
+TaskHandle_t Task1;
 
-// void Task1code(void* parameter);
-// void Task2code(void* parameter);
+void Task1code(void* parameter);
 
 char *sta_ssid   = NULL;
 char *sta_passwd = NULL;
@@ -20,7 +18,7 @@ char *mdns       = NULL;
 Cleaner_module_conf my_cleaner_conf;
 String url;
 
-uint8_t cleaner_mode = 1;
+uint8_t cleaner_mode = 2;
 
 Network_STA_conf my_sta_conf = {
     .ssid   = &sta_ssid,
@@ -48,56 +46,29 @@ void setup() {
     setup_wifi(&network_conf);
     setup_server(&my_cleaner_conf, &network_conf, &cleaner_mode, &url);
 
-    show_dashboard(2, 0);
-    
-    // delay(1000);
-    // xTaskCreatePinnedToCore(Task1code, "Task1", 1024, NULL, 1, &Task1, 1);                         
-    // delay(500); 
-
-    // xTaskCreatePinnedToCore(Task2code, "Task2", 10000, NULL, 1, &Task2, 1);          
-    // delay(500);  
+    xTaskCreatePinnedToCore(Task1code, "Task1", 1024, NULL, 1, &Task1, 1);
+    delay(500);
 }
 
 void loop() {
     loop_server();
-    if(cleaner_mode == 0) {
+    if(cleaner_mode == 0) { // OTA mode.
         if(!update_loop(url)) {
             cleaner_mode = 2;
             ESP.restart();
         } else {
             cleaner_mode = 2;
         }
-    } else if(cleaner_mode == 1) {
+    } else if(cleaner_mode == 1) { // Game mode.
 
-    } else if(cleaner_mode == 2) {
-        
+    } else if(cleaner_mode == 2) { // Auto mode.
+
     }
-    // show_dashboard(2, 0);
-    // delay(1000);
-    // show_dashboard(2, 0);
-    // delay(1000);
-    
-    // show_dashboard(1, 50);
-    // delay(1000);
-    // show_dashboard(1, 50);
-    // delay(1000);
-
-    // show_dashboard(0, 100);
-    // delay(1000);
-    // show_dashboard(0, 100);
-    // delay(1000);
-
 }
 
-// void Task1code(void* parameter) {
-//     for(;;) {
-//         Serial.printf("Hello World!\n");
-//         vTaskDelay(1000 / portTICK_PERIOD_MS);
-//     }
-// }
-
-// void Task2code(void* parameter) {
-//     for(;;) {
-//         delay(1000);
-//     }
-// }
+void Task1code(void* parameter) {
+    for(;;) {
+        show_dashboard(cleaner_mode);
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+    }
+}
