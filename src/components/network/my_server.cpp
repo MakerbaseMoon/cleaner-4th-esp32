@@ -334,7 +334,7 @@ void setup_api() {
     });
 
     // [POST] http://cleaner/api/esp/verion- Get ESP32 version
-    server.on("/api/esp/verion", HTTP_POST, [] (AsyncWebServerRequest *request) {
+    server.on("/api/esp/version", HTTP_POST, [] (AsyncWebServerRequest *request) {
         char *json_str = (char *)malloc( sizeof(char) * 70 );
         if(json_str != NULL) { 
             sprintf(json_str,
