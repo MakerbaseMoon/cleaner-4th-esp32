@@ -56,8 +56,8 @@ void show_dashboard_battery();
 
 // VL53L0X.cpp
 struct VL53L0X_value{
-    uint16_t left;
-    uint16_t right;
+    int32_t left;
+    int32_t right;
 };
 
 void setup_VL53L0X();

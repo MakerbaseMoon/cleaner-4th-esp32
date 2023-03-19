@@ -46,7 +46,7 @@ void setup() {
     setup_wifi(&network_conf);
     setup_server(&my_cleaner_conf, &network_conf, &cleaner_mode, &url);
 
-    xTaskCreatePinnedToCore(Task1code, "Task1", 1024, NULL, 1, &Task1, 1);
+    xTaskCreatePinnedToCore(Task1code, "Task1", 10240, NULL, 1, &Task1, 1);
     delay(500);
 }
 
@@ -67,8 +67,18 @@ void loop() {
 }
 
 void Task1code(void* parameter) {
+    uint16_t k = 0;
+
     for(;;) {
-        show_dashboard(cleaner_mode);
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        VL53L0X_value value = loop_VL53L0X();
+        Serial.printf("%d\t%d\n", value.left, value.right);
+
+        if( k >= 29 ) {
+            show_dashboard(cleaner_mode);
+            k = 0;
+        }
+
+        k++;
+        vTaskDelay(30 / portTICK_PERIOD_MS);
     }
 }

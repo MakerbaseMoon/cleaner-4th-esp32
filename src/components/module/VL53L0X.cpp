@@ -7,8 +7,8 @@ Adafruit_VL53L0X sensor_left  = Adafruit_VL53L0X();
 Adafruit_VL53L0X sensor_right = Adafruit_VL53L0X();
 
 void setup_VL53L0X() {
-    sensor_left. begin(VL53L0X_I2C_ADDR, false, &Wire);
-    sensor_right.begin(VL53L0X_I2C_ADDR, false, &Wire1); 
+    sensor_left. begin(VL53L0X_I2C_ADDR, false, &Wire1);
+    sensor_right.begin(VL53L0X_I2C_ADDR, false, &Wire); 
 }
 
 VL53L0X_value loop_VL53L0X() {

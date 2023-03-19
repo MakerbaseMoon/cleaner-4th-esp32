@@ -71,21 +71,25 @@ void setup_api() {
                 switch(num) {
                     // OTA Mode
                     case 0:
+                        *_cleaner_mode = 0;
+                        motor_stop();
+                        break;
+
+                    // Control Mode
+                    case 1:
+                        *_cleaner_mode = 1;
                         motor_stop();
                         break;
 
                     // Auto Mode
-                    case 1:
-                        motor_stop();
-                        break;
-                    
-                    // Control Mode
                     case 2:
+                        *_cleaner_mode = 2;
                         motor_stop();
                         break;
 
                     // Other Mode
                     default:
+                        *_cleaner_mode = 1;
                         motor_stop();
                         break;
                 }

@@ -11,5 +11,5 @@ void setup_module(Cleaner_module_conf *cleaner_module_conf) {
     setup_IRF520(cleaner_module_conf->IRF520_pin);
     setup_battery(&(cleaner_module_conf->battery_conf));
     setup_SSD1306();
-    // setup_VL53L0X();
+    setup_VL53L0X();
 }
