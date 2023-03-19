@@ -11,7 +11,8 @@ struct Battery_conf {
 };
 
 void setup_battery(Battery_conf *conf);
-uint8_t get_electricity();
+uint8_t  get_electricity();
+uint16_t get_electricity_value();
 
 // MX1584.cpp
 

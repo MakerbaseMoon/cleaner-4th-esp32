@@ -20,6 +20,7 @@ void setup_battery(Battery_conf *conf) {
  */
 uint8_t get_electricity() {
     uint16_t electricity = analogRead(_battery_conf->pin);
+    uint32_t batter_value = (_battery_conf->max - _battery_conf->min) * 100;
 
     if(electricity < _battery_conf->min) {
         return 0;
@@ -30,5 +31,9 @@ uint8_t get_electricity() {
     }
 
     // Scale the analog input value to a percentage between 0 and 100
-    return (uint8_t)((float)(electricity - _battery_conf->min) / (_battery_conf->max - _battery_conf->min) * 100);
+    return ( (electricity - _battery_conf->min) / batter_value );
+}
+
+uint16_t get_electricity_value() {
+    return analogRead(_battery_conf->pin);
 }
