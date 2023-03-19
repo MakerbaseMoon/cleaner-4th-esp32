@@ -42,7 +42,7 @@ void motor_stop() {
  * 
  */
 void motor_forward() {
-    set_motor_speed(true, false, true, false);
+    set_motor_speed(false, true, false, true);
 }
 
 /**
@@ -50,7 +50,7 @@ void motor_forward() {
  * 
  */
 void motor_backward() {
-    set_motor_speed(false, true, false, true);
+    set_motor_speed(true, false, true, false);
 }
 
 /**
@@ -58,7 +58,7 @@ void motor_backward() {
  * 
  */
 void motor_left() {
-    set_motor_speed(true, false, false, true);
+    set_motor_speed(false, true, true, false);
 }
 
 /**
@@ -66,7 +66,7 @@ void motor_left() {
  * 
  */
 void motor_right() {
-    set_motor_speed(false, true, true, false);
+    set_motor_speed(true, false, false, true);
 }
 
 /**
