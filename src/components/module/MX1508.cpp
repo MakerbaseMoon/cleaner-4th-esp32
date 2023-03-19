@@ -31,7 +31,10 @@ void setup_MX1584(MX1584_pinout_conf *pinout_conf, MX1584_pwm_conf *pwm_conf) {
  * 
  */
 void motor_stop() {
-    set_motor_speed(false, false, false, false);
+    ledcWrite(CLEANER_DEFAULT_MOTOR_A01_CHANNEL, 0);
+    ledcWrite(CLEANER_DEFAULT_MOTOR_A02_CHANNEL, 0);
+    ledcWrite(CLEANER_DEFAULT_MOTOR_B01_CHANNEL, 0);
+    ledcWrite(CLEANER_DEFAULT_MOTOR_B02_CHANNEL, 0);
 }
 
 /**
