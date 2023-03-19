@@ -46,9 +46,9 @@ void setup_data(Cleaner_module_conf *cleaner_conf, Network_conf *network_conf) {
 
     // Initialize battery configuration
     cleaner_conf->battery_conf = {
-        .pin = (uint8_t)(cleanerData.getUInt(CLEANER_PREFERENCES_KEY_BATTERY_PIN, CLEANER_DEFAULT_BATTERY)),
-        .max = (uint8_t)(cleanerData.getUInt(CLEANER_PREFERENCES_KEY_BATTERY_MAX, CLEANER_DEFAULT_BATTERY_MAX_VALUE)),
-        .min = (uint8_t)(cleanerData.getUInt(CLEANER_PREFERENCES_KEY_BATTERY_MIN, CLEANER_DEFAULT_BATTERY_MIN_VALUE))
+        .pin = (uint8_t) (cleanerData.getUInt(CLEANER_PREFERENCES_KEY_BATTERY_PIN, CLEANER_DEFAULT_BATTERY)),
+        .max = (uint16_t)(cleanerData.getUInt(CLEANER_PREFERENCES_KEY_BATTERY_MAX, CLEANER_DEFAULT_BATTERY_MAX_VALUE)),
+        .min = (uint16_t)(cleanerData.getUInt(CLEANER_PREFERENCES_KEY_BATTERY_MIN, CLEANER_DEFAULT_BATTERY_MIN_VALUE))
     };
 
     // Initialize fan pin configuration
@@ -69,7 +69,7 @@ void setup_data(Cleaner_module_conf *cleaner_conf, Network_conf *network_conf) {
         .channel_B01 = (uint8_t)(cleanerData.getUInt(CLEANER_PREFERENCES_KEY_B01_PWM, CLEANER_DEFAULT_MOTOR_PWM)),
         .channel_B02 = (uint8_t)(cleanerData.getUInt(CLEANER_PREFERENCES_KEY_B02_PWM, CLEANER_DEFAULT_MOTOR_PWM))
     };
-    
+
     // Save the changes to Preferences
     cleanerData.end();
 }

@@ -288,6 +288,7 @@ void setup_api() {
             }
         }
 
+        set_module(_cleaner_module_conf);
         request->send(200, "application/json", "{\"url\":\"/api/set/module\",\"status\":\"susses\"}");
     });
 
