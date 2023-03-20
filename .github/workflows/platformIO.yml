@@ -90,5 +90,5 @@ jobs:
         with:
           body_path: commit_msg.txt
           name: "Cleaner ESP32 ${{ github.ref_name }}"
-          files: .pio/build/esp32doit-devkit-v1/firmware.bin
+          files: .pio/build/OTA/firmware.bin
           token: ${{ secrets.TOKEN }}
