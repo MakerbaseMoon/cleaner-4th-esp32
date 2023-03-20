@@ -325,6 +325,18 @@ void setup_api() {
         free(module_data);
     });
 
+    // [POST] http://cleaner/api/get/battery - Get battery electricity
+    server.on("/api/get/battery", HTTP_POST, [] (AsyncWebServerRequest *request) {
+        char *battery_data = (char *)malloc( sizeof(char) * 70 );
+        if(battery_data != NULL) {
+            sprintf(battery_data, "{\"url\":\"/api/get/battery\",\"status\":\"susses\",\"electricity\":%u}", get_electricity());
+            request->send(200, "application/json", battery_data);
+        } else {
+            request->send(400, "application/json", "{\"url\":\"/api/get/battery\",\"status\":\"error\",\"message\":\"The battery data was null\"}");
+        }
+        free(battery_data);
+    });
+
     // [POST] http://cleaner/api/esp/restart- Set ESP32 to restart
     server.on("/api/esp/restart", HTTP_POST, [] (AsyncWebServerRequest *request) {
         request->send(200, "application/json", "{\"url\":\"/api/esp/restart\",\"status\":\"susses\"}");
