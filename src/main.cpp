@@ -41,10 +41,6 @@ Network_conf network_conf = {
 };
 
 void setup() {
-    Serial.begin(115200);
-    while(!Serial);
-    Serial.setDebugOutput(true);
-
     setup_data(&my_cleaner_conf, &network_conf);
     setup_module(&my_cleaner_conf);
     
@@ -54,7 +50,7 @@ void setup() {
     xTaskCreatePinnedToCore(Task1code, "Task1", 10240, NULL, 1, &Task1, 1);
 
     if(get_electricity_value() <= 1500) {
-        Serial.printf("Can not get Battery value, enter USB mode,\n");
+        ESP_LOGW("USB Plugin", "Can not get Battery value, enter USB mode");
         set_IRF520_PWM(0);
         motor_stop();
         cleaner_mode = 1;
@@ -84,13 +80,14 @@ void loop() {
 }
 
 void Task1code(void* parameter) {
+    ESP_LOGI("Task1", "Task1 Start.");
     uint16_t k = 0;
 
     for(;;) {
         value = loop_VL53L0X();
-        ESP_LOGI("VL53L0X", "%d\t%d", value.left, value.right);
 
         if( k >= 29 ) {
+            ESP_LOGV("VL53L0X", "%d\t%d", value.left, value.right);
             show_dashboard(cleaner_mode);
             k = 0;
         }
@@ -108,6 +105,7 @@ void autoTask() {
 
     if(autoModeNum == 0) {
         if(( value.left != -1 && value.left <= 50) || (value.right != -1 && value.right <= 50) ) {
+            ESP_LOGW("Auto mode", "value < 50, Motor Stop");
             motor_stop();
             autoModeNum = 1;
         } else {

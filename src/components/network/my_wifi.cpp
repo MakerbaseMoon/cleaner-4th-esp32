@@ -10,6 +10,8 @@ IPAddress AP_subnet(255, 255, 255, 0);
 void WiFiEvent(WiFiEvent_t event);
 
 void setup_wifi(Network_conf *network_conf) {
+    ESP_LOGI("WiFi", "Setup WiFi.");
+
     WiFi.onEvent(WiFiEvent);
     WiFi.setHostname(CLEANER_DEFAULT_MDNS);
     WiFi.mode(WIFI_AP_STA);
@@ -23,61 +25,17 @@ void setup_wifi(Network_conf *network_conf) {
 }
 
 void WiFiEvent(WiFiEvent_t event){
-    Serial.printf("[WiFi-event] event: %d\n", event);
+    ESP_LOGI("WiFi", "Event: %d", event);
 
     switch (event) {
-        case ARDUINO_EVENT_WIFI_READY: 
-            Serial.println("WiFi interface ready");
-            break;
-        case ARDUINO_EVENT_WIFI_SCAN_DONE:
-            Serial.println("Completed scan for access points");
-            break;
-
-        case ARDUINO_EVENT_WIFI_STA_START:
-            Serial.println("WiFi client started");
-            break;
-        case ARDUINO_EVENT_WIFI_STA_STOP:
-            Serial.println("WiFi clients stopped");
-            break;
-        case ARDUINO_EVENT_WIFI_STA_CONNECTED:
-            Serial.println("Connected to access point");
-            break;
-        case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
-            Serial.println("Disconnected from WiFi access point");
-            break;
-            
-        case ARDUINO_EVENT_WIFI_STA_AUTHMODE_CHANGE:
-            Serial.println("Authentication mode of access point has changed");
-            break;
-
         case ARDUINO_EVENT_WIFI_STA_GOT_IP:
-            Serial.print("Obtained IP address: ");
-            Serial.println(WiFi.localIP());
-            break;
-        case ARDUINO_EVENT_WIFI_STA_LOST_IP:
-            Serial.println("Lost IP address and IP address is reset to 0");
-            break;
-
-        case ARDUINO_EVENT_WPS_ER_SUCCESS:
-            Serial.println("WiFi Protected Setup (WPS): succeeded in enrollee mode");
-            break;
-        case ARDUINO_EVENT_WPS_ER_FAILED:
-            Serial.println("WiFi Protected Setup (WPS): failed in enrollee mode");
-            break;
-        case ARDUINO_EVENT_WPS_ER_TIMEOUT:
-            Serial.println("WiFi Protected Setup (WPS): timeout in enrollee mode");
-            break;
-        case ARDUINO_EVENT_WPS_ER_PIN:
-            Serial.println("WiFi Protected Setup (WPS): pin code in enrollee mode");
+            ESP_LOGI("WiFi", "STA IP: %s", WiFi.localIP().toString().c_str());
             break;
 
         case ARDUINO_EVENT_WIFI_AP_START:
-            Serial.println("WiFi access point started");
-            Serial.println(WiFi.softAPIP());
+            ESP_LOGI("WiFi", "AP IP: %s", WiFi.softAPIP().toString().c_str());
             break;
-        case ARDUINO_EVENT_WIFI_AP_STOP:
-            // WiFi access point stopped.
-            break;
+
         default: 
             break;
     }}

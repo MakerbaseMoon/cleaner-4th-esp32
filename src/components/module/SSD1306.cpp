@@ -7,7 +7,9 @@
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire);
 
 void setup_SSD1306() {
-    display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDRESS);
+    if(!display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDRESS)) {
+        ESP_LOGE("SSD1306", "OLED SSD1306 Begin Failed.");
+    }
     display.clearDisplay();
     
     show_logo();

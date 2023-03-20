@@ -1,8 +1,6 @@
 #include <ESPAsyncWebServer.h>
 #include <DNSServer.h>
-// #include <SPIFFS.h>
 #include <WiFi.h>
-#include <Update.h>
 
 #include "version.h"
 #include "components/website.h"
@@ -22,10 +20,6 @@ String *_url;
 bool shouldReboot = false;
 
 void setup_server(Cleaner_module_conf *cleaner_module_conf, Network_conf *network_conf, uint8_t *cleaner_mode, String *url) {
-    // if(!SPIFFS.begin()) {
-    //     while(1);
-    // }
-
     _cleaner_module_conf = cleaner_module_conf;
     _network_conf        = network_conf;
     _cleaner_mode        = cleaner_mode;
