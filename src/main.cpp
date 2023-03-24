@@ -6,7 +6,10 @@
 #include "components/my_network.h"
 
 TaskHandle_t Task1;
-VL53L0X_value value;
+VL53L0X_value value{
+    .left = -1,
+    .right = -1,
+};
 
 void Task1code(void* parameter);
 
@@ -22,7 +25,7 @@ char *mdns       = NULL;
 Cleaner_module_conf my_cleaner_conf;
 String url;
 
-uint8_t cleaner_mode = 2;
+uint8_t cleaner_mode = 1;
 
 Network_STA_conf my_sta_conf = {
     .ssid   = &sta_ssid,
@@ -42,7 +45,7 @@ Network_conf network_conf = {
 
 void setup() {
     setup_data(&my_cleaner_conf, &network_conf);
-    setup_module(&my_cleaner_conf);
+    setup_module(&my_cleaner_conf, &autoModeNum);
     
     setup_wifi(&network_conf);
     setup_server(&my_cleaner_conf, &network_conf, &cleaner_mode, &url);

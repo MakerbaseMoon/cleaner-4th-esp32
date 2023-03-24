@@ -3,7 +3,7 @@
 #include "header.h"
 #include "components/module.h"
 
-void setup_module(Cleaner_module_conf *cleaner_module_conf) {
+void setup_module(Cleaner_module_conf *cleaner_module_conf, uint8_t *cleaner_mode) {
     Wire. begin(CLEANER_DEFAULT_I2C_SDA,  CLEANER_DEFAULT_I2C_SCL,  CLEANER_DEFAULT_I2C_FREQ);
     Wire1.begin(CLEANER_DEFAULT_I2C2_SDA, CLEANER_DEFAULT_I2C2_SCL, CLEANER_DEFAULT_I2C_FREQ);
 
@@ -11,5 +11,7 @@ void setup_module(Cleaner_module_conf *cleaner_module_conf) {
     setup_IRF520(cleaner_module_conf->IRF520_pin);
     setup_battery(&(cleaner_module_conf->battery_conf));
     setup_SSD1306();
-    setup_VL53L0X();
+    // if(!setup_VL53L0X()) {
+    //     *cleaner_mode = 1;
+    // }
 }

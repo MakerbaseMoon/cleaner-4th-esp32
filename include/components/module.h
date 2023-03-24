@@ -59,9 +59,11 @@ void show_dashboard_battery();
 struct VL53L0X_value{
     int32_t left;
     int32_t right;
+    bool left_error;
+    bool right_error;
 };
 
-void setup_VL53L0X();
+uint8_t setup_VL53L0X();
 VL53L0X_value loop_VL53L0X();
 
 // module.cpp
@@ -72,7 +74,7 @@ struct Cleaner_module_conf {
     MX1584_pinout_conf  mx1584_pinout_conf;
 };
 
-void setup_module(Cleaner_module_conf *cleaner_module_conf);
+void setup_module(Cleaner_module_conf *cleaner_module_conf, uint8_t *cleaner_mode);
 
 // OLED SSD1306.cpp
 #define SCREEN_WIDTH   128
